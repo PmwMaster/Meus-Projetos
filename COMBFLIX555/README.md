@@ -47,30 +47,6 @@ O projeto utiliza uma paleta de cores **roxa** moderna e elegante:
 - **JavaScript**: Lógica de aplicação, manipulação do DOM e localStorage
 - **LocalStorage**: Armazenamento de avaliações, carrinho de compras e preferências de tema
 
-## 📁 Estrutura do Projeto
-
-```
-COMBFLIX/
-├── index.html              # Página principal
-├── payment.html            # Página de pagamento
-├── css/
-│   ├── main.css           # Estilos principais
-│   ├── themes.css         # Variáveis de tema e cores
-│   ├── components.css     # Estilos de componentes
-│   └── payment.css        # Estilos da página de pagamento
-├── js/
-│   ├── app.js             # Lógica principal da aplicação
-│   ├── ratings.js         # Sistema de avaliações
-│   └── payment.js         # Lógica da página de pagamento
-└── README.md              # Este arquivo
-```
-
-## 🚀 Como Usar
-
-### Instalação
-
-1. Extraia os arquivos do projeto em uma pasta local
-2. Abra o arquivo `index.html` em um navegador moderno
 
 ### Navegação
 
@@ -134,22 +110,6 @@ O projeto é totalmente responsivo e se adapta a diferentes tamanhos de tela:
 - Tablet (768px - 1199px)
 - Mobile (até 767px)
 
-## 🎨 Alterações Realizadas
-
-### Mudanças de Branding
-
-- ✅ Nome alterado de "CineFlix" para **"CombFlix"**
-- ✅ Título das páginas atualizado
-- ✅ Textos e referências atualizados
-
-### Mudanças de Design
-
-- ✅ Paleta de cores alterada de vermelho para **roxo**
-- ✅ Todas as variáveis CSS atualizadas
-- ✅ Gradientes e efeitos visuais ajustados
-- ✅ Botões e elementos interativos com nova cor
-- ✅ Página de pagamento completamente estilizada em roxo
-- ✅ Página index completamente estilizada em roxo
 
 ### Novas Funcionalidades
 
@@ -174,6 +134,3 @@ O projeto é totalmente responsivo e se adapta a diferentes tamanhos de tela:
 
 Este projeto é de uso educacional e demonstrativo.
 
----
-
-**Desenvolvido com 💜 por CombFlix Team**
