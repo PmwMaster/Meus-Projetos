@@ -1,0 +1,123 @@
+:root {
+    /* Paleta de cores moderna e escura */
+    --bg-primary: #04101a;
+    --bg-secondary: #071a2a;
+    --card-bg: #0d1722;
+    --card-border: rgba(255,255,255,0.04);
+    --accent: #8b5cf6;
+    --accent-light: #a78bfa;
+    --text-primary: #e6eef6;
+    --text-muted: #9aa7b2;
+    --glass: rgba(255,255,255,0.03);
+}
+
+/* Tema padrão já é escuro */
+body {
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    color: var(--text-primary);
+}
+
+/* Modo claro (opcional) */
+body.light-mode {
+    --bg-primary: #f8f9fa;
+    --bg-secondary: #e9ecef;
+    --card-bg: #ffffff;
+    --card-border: #dee2e6;
+    --accent: #8b5cf6;
+    --accent-light: #a78bfa;
+    --text-primary: #212529;
+    --text-muted: #6c757d;
+    --glass: rgba(0,0,0,0.03);
+}
+
+body.light-mode .movie-card,
+body.light-mode .modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+}
+
+body.light-mode input,
+body.light-mode .genre-btn {
+    background: #ffffff;
+    border-color: var(--card-border);
+    color: var(--text-primary);
+}
+
+body.light-mode .header {
+    /* Usar a cor de destaque vermelha no modo claro */
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--card-bg); /* Cor do texto do header no modo claro */
+}
+
+/* Ícone de Configurações */
+.settings-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    background: none;
+    border: none;
+    font-size: 28px; /* Tamanho do ícone */
+    cursor: pointer;
+    color: var(--card-bg); /* Cor do ícone (branco no header) */
+    transition: transform 0.3s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.settings-icon:hover {
+    transform: rotate(45deg);
+}
+
+/* Toggle de tema (dentro do modal) */
+.theme-toggle {
+    /* Removido posicionamento absoluto */
+    z-index: 100;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 70px;
+    height: 34px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 50px;
+    padding: 5px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.toggle-label:hover {
+    border-color: var(--accent);
+}
+
+.sun, .moon {
+    font-size: 16px;
+    z-index: 2;
+}
+
+.ball {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    border-radius: 50%;
+    left: 4px;
+    top: 3px;
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+}
+
+#themeSwitch:checked + .toggle-label .ball {
+    transform: translateX(36px);
+}
+
+#themeSwitch {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+}

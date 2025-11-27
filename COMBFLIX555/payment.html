@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Pagamento - CombFlix</title>
+
+<!-- QR Code e jsPDF -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+  :root{
+    --bg:#071021; --card:#0d1722; --accent:#8b5cf6; --muted:#9aa7b2; --glass: rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg,#04101a 0%, #071a2a 100%); color:#e6eef6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1200px;margin:28px auto;padding:20px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#a78bfa);display:flex;align-items:center;justify-content:center;font-weight:700;color:#071021}
+  h1{margin:0;font-size:20px}
+  p.lead{margin:0;color:var(--muted)}
+
+  .grid{display:grid;grid-template-columns:minmax(360px, 400px) 1fr;gap:20px;margin-top:20px}
+  @media(max-width:880px){ .grid{grid-template-columns:1fr} }
+
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.04); box-shadow: 0 6px 20px rgba(2,6,23,0.6);
+  }
+
+  .movie-info{display:flex;gap:12px;align-items:center}
+  .poster{width:96px;height:132px;border-radius:8px;background:#122227;overflow:hidden;flex-shrink:0}
+  .poster img{width:100%;height:100%;object-fit:cover;display:block}
+  .meta h2{margin:0;font-size:16px}
+  .meta p{margin:6px 0 0;color:var(--muted)}
+
+  .methods{display:flex;gap:8px;margin-top:18px}
+  .method-btn{
+    flex:1;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);
+    background:var(--card); color:var(--muted);cursor:pointer;transition:all .18s;
+  }
+  .method-btn.active{background:linear-gradient(90deg,var(--accent),#a78bfa);color:#071021;font-weight:600;transform:translateY(-3px)}
+
+  .method-box{display:none;margin-top:14px;padding:14px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03)}
+  .method-box.show{display:block;animation:fade .22s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* PIX area */
+  #pixCanvas{width:220px;height:220px;background:transparent;border-radius:8px;display:block;margin:8px 0}
+  .pix-code{word-break:break-all;background:var(--glass);padding:8px;border-radius:8px;color:var(--muted);font-size:13px}
+
+  /* Cartão */
+  .form-row{display:flex;gap:8px}
+  input, select, button { font-family:inherit }
+  input[type="text"], input[type="month"], input[type="tel"]{
+    width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted)
+  }
+  label{font-size:13px;color:var(--muted)}
+  .submit-btn{width:100%;padding:12px;border-radius:9px;border:none;background:var(--accent);color:#071021;font-weight:700;cursor:pointer;margin-top:10px}
+
+  /* Right column */
+  .right-col{display:flex;flex-direction:column;gap:12px}
+  .history{margin-top:8px}
+  .receipt{background:linear-gradient(180deg,#081226,#0b1a2a);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02)}
+  .small{font-size:13px;color:var(--muted)}
+
+  .utils{display:flex;gap:8px;margin-top:10px}
+  .ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:8px;color:var(--muted);cursor:pointer}
+  .back-btn{background:linear-gradient(90deg,rgba(139,92,246,0.2),rgba(167,139,250,0.2));border:1px solid var(--accent);padding:10px 20px;border-radius:8px;color:var(--accent);cursor:pointer;font-weight:600;transition:all .2s}
+  .back-btn:hover{background:linear-gradient(90deg,var(--accent),#a78bfa);color:#071021;transform:translateY(-2px)}
+
+  footer{margin-top:22px;color:var(--muted);font-size:13px;text-align:center}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">CF</div>
+        <div>
+          <h1>CombFlix</h1>
+          <p class="lead">Finalizar pagamento — seguro, rápido e simples</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <button class="back-btn" onclick="window.location.href='index.html'">← Voltar</button>
+        <div class="small">Conectado — modo demo</div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- Left column: pagamento -->
+      <div class="card">
+        <div class="movie-info">
+          <div class="poster" id="posterBox"><img alt="poster"></div>
+          <div class="meta">
+            <h2 id="movieTitle">Título do filme</h2>
+            <p class="small" id="moviePrice">R$ 0.00</p>
+            <p class="small" id="movieExtra"></p>
+          </div>
+        </div>
+
+        <div class="methods">
+          <button class="method-btn active" data-method="pix">PIX</button>
+          <button class="method-btn" data-method="card">Cartão</button>
+          <button class="method-btn" data-method="boleto">Boleto</button>
+        </div>
+
+        <!-- PIX -->
+        <div id="pixBox" class="method-box show">
+          <h3>PIX</h3>
+          <canvas id="pixCanvas"></canvas>
+          <div class="pix-code" id="pixString"></div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="submit-btn" id="copyPixBtn">Copiar código PIX</button>
+            <button class="ghost" id="saveReceiptBtn">Salvar recibo (PDF)</button>
+          </div>
+          <p class="small" id="pixStatus"></p>
+        </div>
+
+        <!-- Cartão -->
+        <form id="cardBox" class="method-box">
+          <h3>Cartão de Crédito</h3>
+          <div style="margin-top:8px">
+            <label>Nome no cartão</label>
+            <input id="cardName" type="text" placeholder="Nome impresso" required>
+          </div>
+          <div style="margin-top:8px">
+            <label>Número do cartão</label>
+            <input id="cardNumber" type="text" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000" required>
+          </div>
+          <div class="form-row" style="margin-top:8px">
+            <div style="flex:1">
+              <label>Validade</label>
+              <input id="cardExp" type="month" required>
+            </div>
+            <div style="width:120px">
+              <label>CVV</label>
+              <input id="cardCvv" type="text" maxlength="4" required>
+            </div>
+          </div>
+          <button class="submit-btn" type="submit">Pagar R$ <span id="cardPayValue">0.00</span></button>
+        </form>
+
+        <!-- Boleto -->
+        <div id="boletoBox" class="method-box">
+          <h3>Boleto Bancário</h3>
+          <p class="small">Gere o boleto e realize o pagamento no seu banco. (simulação)</p>
+          <div class="receipt" id="boletoReceipt">
+            <div><strong>Linha digitável</strong></div>
+            <div id="boletoLine" class="small" style="margin-top:6px;word-break:break-all"></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <button class="submit-btn" id="genBoletoBtn">Gerar Boleto</button>
+            <button class="ghost" id="downloadBoletoPdf">Download PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column: resumo e histórico -->
+      <div class="right-col">
+        <div class="card receipt">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="small">Resumo do pedido</div>
+              <div style="font-weight:700;margin-top:6px" id="summaryTitle">—</div>
+              <div class="small" id="summaryPrice">—</div>
+            </div>
+            <div>
+              <button class="ghost" id="viewHistory">Histórico</button>
+            </div>
+          </div>
+
+          <div class="history" id="historyList" style="margin-top:12px"></div>
+        </div>
+
+        <div class="card small">
+          <div>Observações:</div>
+          <ul style="margin:8px 0 0 16px">
+            <li>Pagamentos aqui são simulados (ambiente de teste).</li>
+            <li>Para produção integre Stripe / Mercado Pago / Banco.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <footer>© CombFlix — Demo • Desenvolvido por você</footer>
+  </div>
+
+<script>
+(async function(){
+  // pegar params
+  const params = new URLSearchParams(window.location.search);
+  const movieId = params.get('id') || '0';
+  const movieTitle = decodeURIComponent(params.get('title') || 'Título Desconhecido');
+  const moviePrice = params.get('price') || '9.90';
+  const poster = params.get('poster') || '';
+
+  // referenciando elementos
+  const posterImg = document.querySelector('#posterBox img');
+  const titleEl = document.getElementById('movieTitle');
+  const priceEl = document.getElementById('moviePrice');
+  const extra = document.getElementById('movieExtra');
+
+  titleEl.textContent = movieTitle;
+  priceEl.textContent = 'R$ ' + Number(moviePrice).toFixed(2);
+  extra.textContent = 'ID: ' + movieId;
+  posterImg.src = poster || 'https://via.placeholder.com/300x440?text=Poster';
+
+  // métodos
+  const methodBtns = document.querySelectorAll('.method-btn');
+  const pixBox = document.getElementById('pixBox');
+  const cardBox = document.getElementById('cardBox');
+  const boletoBox = document.getElementById('boletoBox');
+  const cardPayValue = document.getElementById('cardPayValue');
+
+  cardPayValue.textContent = Number(moviePrice).toFixed(2);
+
+  function hideAll(){
+    [pixBox, cardBox, boletoBox].forEach(b=>b.classList.remove('show'));
+    methodBtns.forEach(b=>b.classList.remove('active'));
+  }
+
+  methodBtns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      hideAll();
+      btn.classList.add('active');
+      const m = btn.dataset.method;
+      if(m==='pix') pixBox.classList.add('show');
+      if(m==='card') cardBox.classList.add('show');
+      if(m==='boleto') boletoBox.classList.add('show');
+    });
+  });
+
+  // PIX: gerar QR e string
+  const pixCanvas = document.getElementById('pixCanvas');
+  const pixStringEl = document.getElementById('pixString');
+  const pixStatus = document.getElementById('pixStatus');
+  const copyPixBtn = document.getElementById('copyPixBtn');
+  const saveReceiptBtn = document.getElementById('saveReceiptBtn');
+
+  function gerarPix(){
+    // Simulação de payload PIX (texto livre)
+    const payload = `CineAluguel|FILME:${movieTitle}|ID:${movieId}|VALOR:${Number(moviePrice).toFixed(2)}`;
+    pixStringEl.textContent = payload;
+    pixStatus.textContent = '';
+    // gerar canvas
+    QRCode.toCanvas(pixCanvas, payload, {width:220}, function(err){
+      if(err) pixStatus.textContent = 'Erro ao gerar QR';
+    });
+  }
+  // gerar PIX por padrão
+  gerarPix();
+
+  copyPixBtn.addEventListener('click', async ()=>{
+    try{
+      await navigator.clipboard.writeText(pixStringEl.textContent);
+      pixStatus.textContent = 'Código PIX copiado!';
+    }catch(e){
+      pixStatus.textContent = 'Falha ao copiar (permissão negada)';
+    }
+  });
+
+  // salvar recibo em PDF com jsPDF
+  saveReceiptBtn.addEventListener('click', async ()=>{
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(16);
+    doc.text('Recibo - CineAluguel',14,20);
+    doc.setFontSize(12);
+    doc.text(`Filme: ${movieTitle}`,14,36);
+    doc.text(`Valor: R$ ${Number(moviePrice).toFixed(2)}`,14,46);
+    doc.text(`Método: PIX`,14,56);
+    doc.text(`ID Pedido: ${movieId}`,14,66);
+    doc.save(`recibo-${movieId}.pdf`);
+    saveToHistory({method:'PIX', title:movieTitle, price: Number(moviePrice).toFixed(2), id:movieId, date: new Date().toISOString()});
+    alert('Recibo PDF gerado e compra salva no histórico (simulado).');
+  });
+
+  // CARTÃO: validação simples e "processamento"
+  const cardForm = document.getElementById('cardBox');
+  cardForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    // validações básicas
+    const name = document.getElementById('cardName').value.trim();
+    const number = document.getElementById('cardNumber').value.replace(/\s/g,'');
+    const exp = document.getElementById('cardExp').value;
+    const cvv = document.getElementById('cardCvv').value;
+    if(!name || number.length<13 || !exp || cvv.length<3){
+      alert('Preencha corretamente os dados do cartão (simulação).');
+      return;
+    }
+    // simulação de processamento
+    setTimeout(()=>{
+      alert('Pagamento aprovado (simulado). Obrigado!');
+      saveToHistory({method:'Cartão', title:movieTitle, price: Number(moviePrice).toFixed(2), id:movieId, date: new Date().toISOString()});
+    },800);
+  });
+
+  // BOLETO: gerar linha digitável simples e PDF
+  const genBoletoBtn = document.getElementById('genBoletoBtn');
+  const boletoLine = document.getElementById('boletoLine');
+  const downloadBoletoPdf = document.getElementById('downloadBoletoPdf');
+
+  function gerarLinhaBoleto(){
+    // gerar uma string fictícia mas plausível
+    const base = (Math.random()*1e10|0).toString().padStart(10,'0');
+    const cod = `23790.${base.substr(0,5)} ${base.substr(5,5)} 00000.000000 1 ${String(Math.round(Number(moviePrice)*100)).padStart(10,'0')}`;
+    return cod;
+  }
+
+  genBoletoBtn.addEventListener('click', ()=>{
+    const linha = gerarLinhaBoleto();
+    boletoLine.textContent = linha;
+    saveToHistory({method:'Boleto', title:movieTitle, price: Number(moviePrice).toFixed(2), id:movieId, date: new Date().toISOString()});
+    alert('Boleto gerado (simulado). Use o PDF para pagamento.');
+  });
+
+  downloadBoletoPdf.addEventListener('click', ()=>{
+    const linha = boletoLine.textContent || gerarLinhaBoleto();
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    doc.setFontSize(14);
+    doc.text('Boleto - CineAluguel (Simulado)',14,20);
+    doc.setFontSize(11);
+    doc.text(`Filme: ${movieTitle}`,14,36);
+    doc.text(`Valor: R$ ${Number(moviePrice).toFixed(2)}`,14,46);
+    doc.text('Linha digitável:',14,60);
+    doc.setFontSize(10);
+    doc.text(linha,14,70);
+    doc.save(`boleto-${movieId}.pdf`);
+  });
+
+  // HISTÓRICO usando localStorage
+  function saveToHistory(item){
+    const key = 'cinealuguel_history_v1';
+    const hist = JSON.parse(localStorage.getItem(key) || '[]');
+    hist.unshift(item);
+    // manter só últimos 50
+    localStorage.setItem(key, JSON.stringify(hist.slice(0,50)));
+    renderHistory();
+  }
+
+  function renderHistory(){
+    const key = 'cinealuguel_history_v1';
+    const hist = JSON.parse(localStorage.getItem(key) || '[]');
+    const list = document.getElementById('historyList');
+    list.innerHTML = '';
+    if(hist.length===0){ list.innerHTML = '<div class="small">Nenhuma compra registrada</div>'; return; }
+    hist.slice(0,8).forEach(h=>{
+      const el = document.createElement('div');
+      el.style.padding='8px 0';
+      el.innerHTML = `<div style="display:flex;justify-content:space-between"><div style="font-weight:600">${h.title}</div><div class="small">${h.method}</div></div>
+                      <div class="small">${new Date(h.date).toLocaleString()} — R$ ${h.price}</div>`;
+      list.appendChild(el);
+    });
+  }
+
+  document.getElementById('viewHistory').addEventListener('click', ()=>{
+    const key = 'cinealuguel_history_v1';
+    const hist = JSON.parse(localStorage.getItem(key) || '[]');
+    if(hist.length===0) alert('Sem histórico');
+    else alert('Mostrando histórico no painel direito (baixo).');
+    renderHistory();
+  });
+
+  // ao iniciar, renderiza histórico e setar comportamento inicial
+  renderHistory();
+
+})();
+</script>
+</body>
+</html>

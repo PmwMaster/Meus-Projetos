@@ -1,0 +1,567 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Botões */
+.btn-details,
+.btn-rent,
+.btn-pay {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-details {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--bg-primary);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.btn-details:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.btn-rent {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--bg-primary);
+    font-size: 1.1em;
+    padding: 14px 28px;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+    width: 100%;
+    margin: 20px 0;
+    display: block;
+}
+
+.btn-rent:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(139, 92, 246, 0.5);
+}
+
+.btn-pay {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--bg-primary);
+    width: 100%;
+    padding: 16px;
+    font-size: 1.2em;
+}
+
+/* Cards de Filmes */
+.movie-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 6px 20px rgba(2,6,23,0.6);
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.movie-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent);
+    box-shadow: 0 12px 30px rgba(139, 92, 246, 0.3);
+}
+
+.movie-card img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    display: block;
+}
+
+.movie-card h3 {
+    padding: 15px 15px 5px;
+    margin: 0;
+    font-size: 1.2em;
+    color: var(--text-primary);
+}
+
+.movie-card p {
+    padding: 5px 15px;
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.movie-card .price {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.3em;
+    padding: 10px 15px;
+}
+
+.movie-card button {
+    margin: 15px;
+    width: calc(100% - 30px);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 16, 26, 0.85);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border: 1px solid var(--card-border);
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(2,6,23,0.8);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 2px solid var(--card-border);
+}
+
+.modal-content h2 {
+    margin: 15px 0;
+    font-size: 1.8em;
+    color: var(--text-primary);
+}
+
+.modal-content p {
+    margin: 10px 0;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.modal-content .price {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 20px 0;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 32px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.close:hover {
+    color: var(--accent);
+    transform: rotate(90deg);
+}
+
+.no-results {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 1.3em;
+    color: var(--text-muted);
+    grid-column: 1 / -1;
+}
+
+/* Estilos do Modal de Configurações */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.setting-item p {
+    margin: 0;
+    font-size: 1.1em;
+    color: var(--text-primary);
+}
+
+.small-text {
+    font-size: 0.8em;
+    color: var(--text-muted);
+    margin-top: 15px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .movie-card img {
+        height: 300px;
+    }
+    
+    .modal-content {
+        padding: 20px;
+        max-width: 90%;
+    }
+    
+    .modal-content h2 {
+        font-size: 1.5em;
+    }
+    
+    .btn-rent {
+        font-size: 1em;
+        padding: 12px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .movie-card img {
+        height: 250px;
+    }
+    
+    .movie-card h3 {
+        font-size: 1.1em;
+    }
+    
+    .movie-card .price {
+        font-size: 1.2em;
+    }
+    
+    .btn-rent {
+        font-size: 0.95em;
+        padding: 10px 16px;
+    }
+}
+
+/* Sistema de Avaliações */
+.average-rating {
+    margin: 20px 0;
+    padding: 15px;
+    background: linear-gradient(180deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+    border-radius: 8px;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.stars-display {
+    font-size: 24px;
+    color: #fbbf24;
+    margin-bottom: 5px;
+}
+
+.rating-text {
+    color: var(--text-muted);
+    font-size: 0.9em;
+}
+
+.rating-form {
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+}
+
+.rating-form h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.2em;
+    color: var(--text-primary);
+}
+
+.stars-input {
+    font-size: 32px;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.stars-input .star {
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    margin: 0 3px;
+}
+
+.stars-input .star:hover,
+.stars-input .star.active {
+    color: #fbbf24;
+    transform: scale(1.1);
+}
+
+#ratingComment {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    background: rgba(255,255,255,0.02);
+    color: var(--text-primary);
+    font-family: inherit;
+    resize: vertical;
+    margin-top: 10px;
+}
+
+#ratingComment:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.btn-submit-rating {
+    width: 100%;
+    padding: 12px 20px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: var(--bg-primary);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-submit-rating:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.btn-submit-rating:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.ratings-list {
+    margin: 20px 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.ratings-list h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.2em;
+    color: var(--text-primary);
+}
+
+.rating-item {
+    padding: 15px;
+    margin-bottom: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+}
+
+.rating-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.rating-user {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.rating-stars {
+    color: #fbbf24;
+    font-size: 16px;
+}
+
+.rating-date {
+    font-size: 0.85em;
+    color: var(--text-muted);
+}
+
+.rating-comment {
+    margin-top: 8px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.no-ratings {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-muted);
+}
+
+/* Scrollbar para modal */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.02);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-light);
+}
+
+/* Scrollbar para lista de avaliações */
+.ratings-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ratings-list::-webkit-scrollbar-track {
+    background: var(--card-bg);
+    border-radius: 3px;
+}
+
+.ratings-list::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 3px;
+}
+
+/* Responsividade para Avaliações */
+@media (max-width: 768px) {
+    .stars-input {
+        font-size: 28px;
+    }
+    
+    .rating-form {
+        padding: 15px;
+    }
+    
+    .rating-form h3 {
+        font-size: 1.1em;
+    }
+    
+    .ratings-list {
+        max-height: 300px;
+    }
+    
+    .rating-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .rating-item {
+        padding: 12px;
+    }
+    
+    .average-rating {
+        padding: 12px;
+    }
+    
+    .stars-display {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stars-input {
+        font-size: 24px;
+    }
+    
+    .stars-input .star {
+        margin: 0 2px;
+    }
+    
+    .rating-form {
+        padding: 12px;
+    }
+    
+    .rating-form h3 {
+        font-size: 1em;
+    }
+    
+    #ratingComment {
+        font-size: 14px;
+        padding: 10px;
+    }
+    
+    .btn-submit-rating {
+        padding: 10px 16px;
+        font-size: 14px;
+    }
+    
+    .ratings-list {
+        max-height: 250px;
+    }
+    
+    .ratings-list h3 {
+        font-size: 1em;
+    }
+    
+    .rating-item {
+        padding: 10px;
+    }
+    
+    .rating-user {
+        font-size: 0.9em;
+    }
+    
+    .rating-stars {
+        font-size: 14px;
+    }
+    
+    .rating-date {
+        font-size: 0.75em;
+    }
+    
+    .rating-comment {
+        font-size: 0.9em;
+    }
+    
+    .average-rating {
+        padding: 10px;
+    }
+    
+    .stars-display {
+        font-size: 18px;
+    }
+    
+    .rating-text {
+        font-size: 0.85em;
+    }
+}
+
+/* Avaliação nos cards */
+.card-rating {
+    padding: 5px 15px;
+    margin: 0;
+    color: #fbbf24;
+    font-size: 0.95em;
+    font-weight: 600;
+}
+
+/* Botão Ver Todas as Avaliações */
+.btn-view-all:hover {
+    background: linear-gradient(90deg, var(--accent), var(--accent-light)) !important;
+    color: var(--bg-primary) !important;
+    transform: translateY(-2px);
+}

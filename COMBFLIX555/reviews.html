@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliações - CombFlix</title>
+    
+    <style>
+        :root {
+            --bg: #071021;
+            --card: #0d1722;
+            --accent: #8b5cf6;
+            --muted: #9aa7b2;
+            --glass: rgba(255,255,255,0.03);
+            --border: rgba(255,255,255,0.04);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, #04101a 0%, #071a2a 100%);
+            color: #e6eef6;
+            -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #071021;
+            font-size: 24px;
+        }
+        
+        .brand-info h1 {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .brand-info p {
+            font-size: 14px;
+            color: var(--muted);
+        }
+        
+        .back-btn {
+            background: linear-gradient(90deg, rgba(139,92,246,0.2), rgba(167,139,250,0.2));
+            border: 1px solid var(--accent);
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all .2s;
+            font-size: 14px;
+        }
+        
+        .back-btn:hover {
+            background: linear-gradient(90deg, var(--accent), #a78bfa);
+            color: #071021;
+            transform: translateY(-2px);
+        }
+        
+        /* Movie Info Section */
+        .movie-section {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border);
+        }
+        
+        .poster-container {
+            width: 200px;
+            height: 280px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #122227;
+        }
+        
+        .poster-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .movie-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .movie-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .movie-meta {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .rating-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(90deg, var(--accent), #a78bfa);
+            color: #071021;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        
+        .rating-count {
+            color: var(--muted);
+            font-size: 14px;
+        }
+        
+        .movie-description {
+            color: var(--muted);
+            line-height: 1.6;
+            margin-top: 12px;
+        }
+        
+        /* Reviews Section */
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .reviews-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .filter-btn {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 6px;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all .2s;
+            font-size: 14px;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(90deg, var(--accent), #a78bfa);
+            color: #071021;
+            font-weight: 600;
+        }
+        
+        .filter-btn:hover:not(.active) {
+            border-color: var(--accent);
+            color: #e6eef6;
+        }
+        
+        /* Review Cards */
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .review-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            transition: all .2s;
+        }
+        
+        .review-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #a78bfa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #071021;
+        }
+        
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .review-date {
+            font-size: 12px;
+            color: var(--muted);
+        }
+        
+        .review-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(139,92,246,0.2);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        
+        .review-comment {
+            color: #e6eef6;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+        
+        .no-reviews {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+        }
+        
+        .no-reviews-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: var(--muted);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .movie-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .poster-container {
+                width: 100%;
+                max-width: 200px;
+                margin: 0 auto;
+            }
+            
+            .reviews-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            
+            .filter-buttons {
+                width: 100%;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="brand">
+                <div class="logo">CF</div>
+                <div class="brand-info">
+                    <h1>CombFlix</h1>
+                    <p>Avaliações de usuários</p>
+                </div>
+            </div>
+            <button class="back-btn" onclick="window.location.href='index.html'">← Voltar</button>
+        </div>
+        
+        <!-- Movie Info -->
+        <div class="movie-section">
+            <div class="poster-container">
+                <img id="moviePoster" src="https://via.placeholder.com/300x440?text=Poster" alt="Poster do filme">
+            </div>
+            <div class="movie-info">
+                <h1 class="movie-title" id="movieTitle">Título do Filme</h1>
+                <div class="movie-meta">
+                    <div class="rating-badge">
+                        <span>⭐</span>
+                        <span id="averageRating">0.0</span>
+                    </div>
+                    <span class="rating-count" id="ratingCount">0 avaliações</span>
+                </div>
+                <p class="movie-description" id="movieDescription">
+                    Carregando informações do filme...
+                </p>
+            </div>
+        </div>
+        
+        <!-- Stats -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <div class="stat-value" id="totalReviews">0</div>
+                <div class="stat-label">Total de Avaliações</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgRating">0.0</div>
+                <div class="stat-label">Nota Média</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="fiveStars">0</div>
+                <div class="stat-label">5 Estrelas</div>
+            </div>
+        </div>
+        
+        <!-- Reviews -->
+        <div class="reviews-header">
+            <h2>Todas as Avaliações</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Todas</button>
+                <button class="filter-btn" data-filter="5">5 ⭐</button>
+                <button class="filter-btn" data-filter="4">4 ⭐</button>
+                <button class="filter-btn" data-filter="3">3 ⭐</button>
+            </div>
+        </div>
+        
+        <div class="reviews-list" id="reviewsList">
+            <div class="no-reviews">
+                <div class="no-reviews-icon">📝</div>
+                <p>Nenhuma avaliação encontrada para este filme.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/ratings.js"></script>
+    <script>
+        // Recuperar parâmetros da URL
+        const params = new URLSearchParams(window.location.search);
+        const movieId = params.get('id') || '0';
+        const movieTitle = decodeURIComponent(params.get('title') || 'Título Desconhecido');
+        const moviePoster = params.get('poster') || 'https://via.placeholder.com/300x440?text=Poster';
+        
+        // Atualizar informações do filme
+        document.getElementById('movieTitle').textContent = movieTitle;
+        document.getElementById('moviePoster').src = moviePoster;
+        document.getElementById('movieDescription').textContent = `Confira as avaliações de outros usuários sobre "${movieTitle}". Veja o que as pessoas estão dizendo sobre este filme!`;
+        
+        // Carregar avaliações
+        function loadReviews(filter = 'all') {
+            const movieData = ratingSystem.getMovieRatings(movieId);
+            const reviewsList = document.getElementById('reviewsList');
+            
+            // Se não houver avaliações, gerar algumas de exemplo
+            if (movieData.ratings.length === 0) {
+                ratingSystem.generateSampleRatings(movieId, 8);
+                const updatedData = ratingSystem.getMovieRatings(movieId);
+                displayReviews(updatedData, filter);
+            } else {
+                displayReviews(movieData, filter);
+            }
+        }
+        
+        function displayReviews(movieData, filter) {
+            const reviewsList = document.getElementById('reviewsList');
+            let reviews = movieData.ratings;
+            
+            // Filtrar por nota
+            if (filter !== 'all') {
+                const minRating = parseInt(filter);
+                const maxRating = minRating + 0.9;
+                reviews = reviews.filter(r => r.rating >= minRating && r.rating <= maxRating);
+            }
+            
+            // Atualizar estatísticas
+            document.getElementById('averageRating').textContent = movieData.averageRating.toFixed(1);
+            document.getElementById('ratingCount').textContent = `${movieData.totalRatings} avaliações`;
+            document.getElementById('totalReviews').textContent = movieData.totalRatings;
+            document.getElementById('avgRating').textContent = movieData.averageRating.toFixed(1);
+            
+            const fiveStarsCount = movieData.ratings.filter(r => r.rating >= 5).length;
+            document.getElementById('fiveStars').textContent = fiveStarsCount;
+            
+            // Exibir avaliações
+            if (reviews.length === 0) {
+                reviewsList.innerHTML = `
+                    <div class="no-reviews">
+                        <div class="no-reviews-icon">🔍</div>
+                        <p>Nenhuma avaliação encontrada com este filtro.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Ordenar por data (mais recentes primeiro)
+            reviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            reviewsList.innerHTML = reviews.map(review => {
+                const initials = review.userName.split(' ').map(n => n[0]).join('').substring(0, 2);
+                const formattedDate = new Date(review.date).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                
+                return `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="user-info">
+                                <div class="user-avatar">${initials}</div>
+                                <div class="user-details">
+                                    <div class="user-name">${review.userName}</div>
+                                    <div class="review-date">${formattedDate}</div>
+                                </div>
+                            </div>
+                            <div class="review-rating">
+                                <span>⭐</span>
+                                <span>${review.rating.toFixed(1)}</span>
+                            </div>
+                        </div>
+                        <div class="review-comment">${review.comment}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Filtros
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                loadReviews(filter);
+            });
+        });
+        
+        // Carregar avaliações ao iniciar
+        loadReviews();
+    </script>
+</body>
+</html>

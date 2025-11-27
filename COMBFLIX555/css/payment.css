@@ -1,0 +1,176 @@
+/* ====== RESET ====== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #111;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+h1, h2, h3 {
+  margin-bottom: 10px;
+}
+
+#movieInfo {
+  background: #1b1b1b;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+  font-size: 18px;
+  text-align: center;
+  border: 1px solid #333;
+  max-width: 800px; /* Limitar largura */
+  width: 100%;
+}
+
+/* ====== BOTÕES ====== */
+.pay-btn {
+  background: #8b5cf6;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  outline: none;
+  font-size: 17px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 10px;
+  transition: 0.3s;
+}
+
+.pay-btn:hover {
+  background: #7c3aed;
+  transform: scale(1.05);
+}
+
+/* ====== BOXES ====== */
+.box {
+  display: none;
+  margin-top: 20px;
+  padding: 20px;
+  background: #1c1c1c;
+  border-radius: 10px;
+  border: 1px solid #333;
+  max-width: 600px; /* Limitar largura do box */
+  width: 100%;
+}
+
+#pixBox {
+  text-align: center;
+}
+
+#pixCode {
+  margin-top: 10px;
+  background: #000;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+#copyPix {
+  margin-top: 10px;
+  padding: 10px 15px;
+  background: #008f39;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#copyPix:hover {
+  background: #0dbf55;
+  transform: scale(1.05);
+}
+
+/* ====== QR CODE ====== */
+#qrcode {
+  margin: 0 auto;
+  width: 200px;
+  height: 200px;
+}
+
+/* ====== CARTÃO ====== */
+#cardBox label {
+  display: block;
+  margin-top: 10px;
+  font-size: 15px;
+}
+
+#cardBox input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #222;
+  color: #fff;
+}
+
+#cardSubmit {
+  margin-top: 15px;
+  background: #0066ff;
+  padding: 12px;
+  color: #fff;
+  width: 100%;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+#cardSubmit:hover {
+  background: #0050cc;
+  transform: scale(1.05);
+}
+
+/* ====== BOLETO ====== */
+#boletoBox {
+  line-height: 1.6;
+}
+
+#boletoBox h2 {
+  margin-bottom: 10px;
+}
+
+#boletoBox span {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+#boletoBox #codigo {
+  display: block;
+  margin-top: 10px;
+  font-size: 18px;
+  word-spacing: 5px;
+  background: #000;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+/* ====== STATUS ====== */
+#statusMsg {
+  margin-top: 25px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #12ff7d;
+}
+
+/* ====== MOBILE ====== */
+@media (max-width: 600px) {
+  #movieInfo {
+    font-size: 16px;
+  }
+
+  #pixCode,
+  #codigo {
+    font-size: 14px;
+  }
+}
